@@ -1,0 +1,80 @@
+.background {
+  width: 100%;
+}
+
+.background img {
+  width: 100%;
+}
+
+.navBackground {
+  position: absolute;
+  width: 80%;
+  height: 90px;
+  border-radius: 70px;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+}
+
+.nav {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 50px;
+}
+
+.action {
+  display: flex;
+  gap: 20px;
+}
+
+.login {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 87px;
+  height: 36px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid rgba(2, 113, 180, 0.5);
+  border-radius: 30px;
+  transition: background 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.login:hover {
+  background: linear-gradient(90deg, #009ee7 0%, #0271b4 100%);
+  color: #fff;
+  border: none;
+}
+
+.signup {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 127px;
+  height: 36px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(90deg, #009ee7 0%, #0271b4 100%);
+  border-radius: 30px;
+  transition: transform 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signup:hover {
+  transform: scale(1.05);
+}
