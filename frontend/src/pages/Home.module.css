@@ -1,6 +1,6 @@
 .homeContainer {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background-image: url("../assets/background.png");
   background-size: cover;
   background-position: center;
@@ -111,7 +111,153 @@
   font-weight: 700;
   background: linear-gradient(90deg, #009ee7, #0271b4, #165dc3);
   background-clip: text;
-  -webkit-background-clip: text; /* necessário para Chrome/Safari */
+  -webkit-background-clip: text;
   color: transparent;
-  -webkit-text-fill-color: transparent; /* necessário para Chrome/Safari */
+  -webkit-text-fill-color: transparent;
+}
+
+.header p {
+  margin-top: 20px;
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  text-align: center;
+}
+
+.header span {
+  color: #0271b4;
+}
+
+.content {
+  margin-top: 40px;
+  height: 346px;
+  width: 940px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.textArea {
+  display: flex;
+  width: 100%;
+  height: 60%;
+  justify-content: center;
+  padding: 40px 40px 0 40px;
+}
+
+.projectDescription {
+  width: 100%;
+  height: 100%;
+  border: solid 1px #dedfe5;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  padding: 12px;
+  box-sizing: border-box;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.5;
+  min-height: 100px;
+  font-size: 16px;
+  color: #333;
+  font-weight: 400;
+}
+
+.projectDescription:focus-visible {
+  outline: none;
+  border-color: #006fb4;
+  border-width: 2px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contentInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  height: 10%;
+}
+
+.couter {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  color: #333;
+  font-size: 14px;
+}
+
+.fileNameDisplay {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #666;
+  animation: fadeIn 0.5s ease-in-out;
+  min-height: 1em;
+}
+
+.fileNameDisplay span {
+  font-weight: 500;
+}
+
+.btnContent {
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 70px;
+  padding: 0 70px;
+}
+
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.uploadLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 4px solid #808080;
+  border-radius: 30px;
+  padding: 8px 44px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #555;
+}
+
+.uploadLabel:hover {
+  background-color: #f0f0f0;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.btnFind {
+  height: 50px;
+  width: 469px;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #009ee7 0%, #0271b4 100%);
+  font-family: "Inter", sans-serif;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.btnFind:hover {
+  transform: scale(1.02);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
