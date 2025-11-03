@@ -1,0 +1,134 @@
+package com.example.foment.service;
+
+import com.example.foment.domain.Contato;
+import com.example.foment.domain.Endereco;
+import com.example.foment.domain.User;
+import com.example.foment.repository.ContatoRepository;
+import com.example.foment.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class FomentServiceUser {
+
+    private final UserRepository userRepository;
+    private final ContatoRepository contatoRepository; // ✅ injetado corretamente
+
+    public User cadastrarUsuario(User usuario) {
+        // --- ENDEREÇO PRINCIPAL ---
+        if (usuario.getEndereco() == null) {
+            usuario.setEndereco(new Endereco());
+        }
+
+        // --- CONTATO ---
+        if (usuario.getContato() == null) {
+            usuario.setContato(new Contato());
+        } else if (usuario.getContato().getId() != null) {
+            // Se o contato já existe, pega a entidade gerenciada do banco
+            Contato contatoGerenciado = contatoRepository.findById(usuario.getContato().getId())
+                    .orElseThrow(() -> new RuntimeException("Contato não encontrado"));
+            usuario.setContato(contatoGerenciado);
+        }
+
+        // --- ENDEREÇO DENTRO DO CONTATO ---
+        if (usuario.getContato().getEndereco() == null) {
+            usuario.getContato().setEndereco(new Endereco());
+        }
+
+        // --- SALVAR USUÁRIO ---
+        return userRepository.save(usuario);
+    }
+
+    // --- métodos de edição, busca, deletar, etc. permanecem iguais ---
+    public User editarUsuario(User usuario) {
+        User userExistente = userRepository.findById(usuario.getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        userExistente.setNome(usuario.getNome());
+        userExistente.setSenha(usuario.getSenha());
+        userExistente.setTokenSenha(usuario.getTokenSenha());
+        userExistente.setFotoPerfil(usuario.getFotoPerfil());
+        userExistente.setTusCode(usuario.getTusCode());
+        userExistente.setDataNascimento(usuario.getDataNascimento());
+        userExistente.setDataCriacao(usuario.getDataCriacao());
+        userExistente.setAtivo(usuario.getAtivo());
+        userExistente.setCpf(usuario.getCpf());
+        userExistente.setCampoDeEstudo(usuario.getCampoDeEstudo());
+
+        atualizarEnderecoUsuario(userExistente, usuario.getEndereco());
+        atualizarContato(userExistente, usuario.getContato());
+
+        if (usuario.getInstituicao() != null) {
+            userExistente.setInstituicao(usuario.getInstituicao());
+        }
+        if (usuario.getFeiraInscrita() != null) {
+            userExistente.setFeiraInscrita(usuario.getFeiraInscrita());
+        }
+
+        return userRepository.save(userExistente);
+    }
+
+    public void deletarUsuario(Integer id) {
+        userRepository.deleteById(id);
+    }
+
+    public List<User> buscarUsuarios() {
+        return userRepository.findAll();
+    }
+
+    public User buscarUsuarioPorId(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
+
+    private void atualizarContato(User userExistente, Contato contatoAtualizado) {
+        if (contatoAtualizado != null) {
+            Contato contatoExistente = userExistente.getContato();
+            if (contatoExistente == null) {
+                contatoExistente = new Contato();
+                userExistente.setContato(contatoExistente);
+            }
+
+            contatoExistente.setTelefone(contatoAtualizado.getTelefone());
+            contatoExistente.setEmail(contatoAtualizado.getEmail());
+            atualizarEnderecoContato(contatoExistente, contatoAtualizado.getEndereco());
+        }
+    }
+
+    private void atualizarEnderecoUsuario(User userExistente, Endereco enderecoAtualizado) {
+        if (enderecoAtualizado != null) {
+            Endereco enderecoExistente = userExistente.getEndereco();
+            if (enderecoExistente == null) {
+                enderecoExistente = new Endereco();
+                userExistente.setEndereco(enderecoExistente);
+            }
+
+            enderecoExistente.setEstado(enderecoAtualizado.getEstado());
+            enderecoExistente.setNumero(enderecoAtualizado.getNumero());
+            enderecoExistente.setCep(enderecoAtualizado.getCep());
+            enderecoExistente.setLogradouro(enderecoAtualizado.getLogradouro());
+            enderecoExistente.setComplemento(enderecoAtualizado.getComplemento());
+            enderecoExistente.setPais(enderecoAtualizado.getPais());
+        }
+    }
+
+    private void atualizarEnderecoContato(Contato contatoExistente, Endereco enderecoAtualizado) {
+        if (enderecoAtualizado != null) {
+            Endereco enderecoExistente = contatoExistente.getEndereco();
+            if (enderecoExistente == null) {
+                enderecoExistente = new Endereco();
+                contatoExistente.setEndereco(enderecoExistente);
+            }
+
+            enderecoExistente.setEstado(enderecoAtualizado.getEstado());
+            enderecoExistente.setNumero(enderecoAtualizado.getNumero());
+            enderecoExistente.setCep(enderecoAtualizado.getCep());
+            enderecoExistente.setLogradouro(enderecoAtualizado.getLogradouro());
+            enderecoExistente.setComplemento(enderecoAtualizado.getComplemento());
+            enderecoExistente.setPais(enderecoAtualizado.getPais());
+        }
+    }
+}
