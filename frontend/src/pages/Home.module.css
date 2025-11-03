@@ -22,11 +22,16 @@
   background-color: #fff;
   padding-right: 50px;
   padding-left: 50px;
+  gap: 20px; /* Adiciona um espaçamento mínimo */
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
   height: 90px;
+}
+
+.navMenu {
+  display: contents;
 }
 
 .navSections {
@@ -36,7 +41,14 @@
   font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 600;
+  margin: 0 auto;
+}
+.navSections li {
   cursor: pointer;
+}
+
+.menuBtn {
+  display: none;
 }
 
 .action {
@@ -253,11 +265,225 @@
   transform: scale(1.02);
 }
 
+.mainFairs {
+  padding: 120px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mainFairs h1 {
+  font-family: "Inter", sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #212529;
+}
+
+.fairsList {
+  display: flex;
+  flex-direction: row;
+  gap: 70px;
+  padding-top: 50px;
+}
+
+.fairsContent {
+  background: #fff;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  width: 380px;
+  height: 390px;
+  border-radius: 20px;
+}
+
+.fairsContent img {
+  border-radius: 20px;
+}
+
+.fairsInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding-top: 22px;
+}
+
+.fairsDate {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.fairsDate p {
+  font-family: "Inter", sans-serif;
+  font-size: 30px;
+}
+
+.fairsDate span {
+  font-family: "Inter", sans-serif;
+  font-size: 27px;
+  font-weight: 700;
+  color: #0271b4;
+}
+
+.fairsAction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.fairsAction span {
+  font-family: "Inter", sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.fairsAction button {
+  background: transparent;
+  border: 2px solid #0271b4;
+  border-radius: 60px;
+  height: 28px;
+  width: 130px;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  color: #0271b4;
+  cursor: pointer;
+}
+
+.fairsAction button:hover {
+  background-color: #0271b4;
+  color: #fff;
+  transition: 0.3s ease;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@media (max-width: 1024px) {
+  .navContainer {
+    width: 90%;
+    padding: 0 20px;
+  }
+  .navSections {
+    gap: 30px;
+    font-size: 14px;
+  }
+  .content {
+    width: 90%;
+    height: auto;
+    padding-bottom: 20px;
+  }
+  .btnContent {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    height: auto;
+  }
+  .btnFind {
+    width: 100%;
+  }
+  .fairsList {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .homeContainer {
+    padding-top: 20px;
+  }
+  .navContainer {
+    padding: 0 25px;
+    height: 70px;
+  }
+  .logo {
+    height: 70px;
+    z-index: 101;
+  }
+  .menuBtn {
+    display: block;
+    cursor: pointer;
+    z-index: 101;
+    color: #333;
+  }
+  .navMenu {
+    position: fixed;
+    display: flex;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 1);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 100;
+  }
+  .navMenuOpen {
+    transform: translateX(0);
+  }
+  .navSections {
+    flex-direction: column;
+    align-items: center;
+    font-size: 24px;
+  }
+  .action {
+    flex-direction: column;
+    align-items: center;
+  }
+  .header {
+    margin-top: 60px;
+    padding: 0 20px;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 20px;
+  }
+  .header h2 {
+    font-size: 28px;
+  }
+  .header p {
+    font-size: 14px;
+  }
+  .headerDescription br {
+    display: none;
+  }
+  .content {
+    margin-top: 30px;
+  }
+  .textArea {
+    padding: 20px 20px 0 20px;
+  }
+  .contentInfo {
+    padding: 0 20px;
+  }
+  .mainFairs {
+    padding: 80px 0;
+  }
+  .mainFairs h1 {
+    font-size: 30px;
+  }
+  .fairsContent {
+    width: 90vw;
+    max-width: 340px;
+    height: auto;
+  }
+  .fairsContent img {
+    width: 100%;
+    height: auto;
+  }
+  .fairsInfo {
+    padding: 20px 0;
   }
 }
