@@ -34,13 +34,12 @@ function Signup() {
         email: formData.email,
         telefone: formData.telefone || null,
       },
-      // Campos não presentes no formulário são enviados como null ou com valores padrão
       tokenSenha: null,
       fotoPerfil: null,
       tusCode: null,
       ativo: true,
       cpf: null,
-      dataCriacao: new Date().toISOString().split("T")[0], // Data atual
+      dataCriacao: new Date().toISOString().split("T")[0],
       endereco: null,
     };
 
@@ -51,8 +50,6 @@ function Signup() {
       );
       console.log("Usuário cadastrado com sucesso:", response.data);
       alert("Cadastro realizado com sucesso!");
-      // Você pode redirecionar o usuário para a página de login aqui
-      // history.push("/login");
     } catch (error) {
       console.error(
         "Erro ao cadastrar usuário:",
