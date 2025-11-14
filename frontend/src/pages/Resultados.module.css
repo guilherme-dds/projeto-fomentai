@@ -1,0 +1,291 @@
+.resultsContainer {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url("../assets/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 40px;
+}
+
+.navContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 85%;
+  height: 90px;
+  border-radius: 70px;
+  background-color: #fff;
+  padding-right: 50px;
+  padding-left: 50px;
+  gap: 20px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.navMenu {
+  display: contents;
+}
+
+.navSections {
+  display: flex;
+  list-style: none;
+  flex-direction: row;
+  gap: 50px;
+  color: #000;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 auto;
+}
+
+.navSections li {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.navSections li:hover {
+  color: #00aaff;
+}
+
+.logo {
+  height: 90px;
+}
+
+.action a {
+  text-decoration: none;
+  font-weight: bold;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action {
+  display: flex;
+  gap: 20px;
+}
+
+.login {
+  border: 2px solid rgba(2, 113, 180, 0.5);
+  border-radius: 30px;
+  transition: background 0.3s ease;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 87px;
+  height: 36px;
+}
+
+.login:hover {
+  background: linear-gradient(90deg, #009ee7 0%, #0271b4 100%);
+  color: #fff;
+  border: none;
+}
+
+.signup {
+  background: linear-gradient(90deg, #009ee7 0%, #0271b4 100%);
+  color: white;
+  border-radius: 30px;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 127px;
+  height: 36px;
+}
+
+.signup:hover {
+  transform: scale(1.05);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  margin-top: 100px;
+}
+
+.header h1 {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #212529;
+}
+
+.header p {
+  font-family: "Inter", sans-serif;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.content {
+  width: 85%;
+  max-width: 1200px;
+  padding-bottom: 4rem;
+}
+
+.fairsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.fairsContent {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fairsContent:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.fairsContent img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.fairsInfo {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.fairsAction {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.fairName {
+  font-family: "Inter", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.75rem;
+}
+
+.justification {
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.saibaMaisBtn {
+  font-family: "Inter", sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #0271b4;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  align-self: flex-start;
+  transition: background-color 0.2s;
+}
+
+.saibaMaisBtn:hover {
+  background-color: #02609b;
+}
+
+.noResults {
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.noResults h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.backButton {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.8rem 1.5rem;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.menuBtn {
+  display: none;
+  color: #333;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+@media (max-width: 768px) {
+  .menuBtn {
+    display: block;
+    z-index: 101;
+  }
+
+  .logo {
+    height: 70px;
+    z-index: 101;
+  }
+
+  .navMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 1);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+  }
+
+  .navMenuOpen {
+    transform: translateX(0);
+  }
+
+  .navSections {
+    flex-direction: column;
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .action {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navContainer {
+    height: 70px;
+    padding: 0 25px;
+  }
+}

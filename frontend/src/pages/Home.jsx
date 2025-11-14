@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
-import { Upload, Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { Upload, Menu, X, ExternalLink } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from "./Home.module.css";
 import logo from "../assets/logo.png";
 import placeholder from "../assets/placeholder.png";
@@ -8,6 +9,8 @@ import placeholder from "../assets/placeholder.png";
 function Home() {
   const [fileName, setFileName] = useState(null);
   const [text, setText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const maxLength = 2000;
   const fairsSectionRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,8 +34,57 @@ function Home() {
     fairsSectionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isLoading]);
+
+  const navigate = useNavigate();
+
+  const handleFindFairs = async () => {
+    if (!text.trim()) {
+      alert("Por favor, descreva o seu projeto na caixa de texto.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post("http://localhost:8000/analisar", {
+        description: text,
+      });
+      const recommendedFairs = response.data.filter(
+        (fair) => fair.resposta === "Sim"
+      );
+      navigate("/resultados", {
+        state: { results: recommendedFairs, description: text },
+      });
+    } catch (err) {
+      setError(
+        "Ocorreu um erro ao analisar o projeto. Por favor, tente novamente."
+      );
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={styles.homeContainer}>
+      {isLoading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Analisando seu projeto e buscando as melhores feiras...</p>
+        </div>
+      )}
+
       <div className={styles.navContainer}>
         <img src={logo} className={styles.logo} />
         <div
@@ -102,11 +154,18 @@ function Home() {
               onChange={handleFileChange}
             />
           </div>
-          <button className={styles.btnFind}>
-            ENCONTRE AS MELHORES FEIRAS
+          <button
+            className={styles.btnFind}
+            onClick={handleFindFairs}
+            disabled={isLoading}
+          >
+            {isLoading ? "Analisando..." : "ENCONTRE AS MELHORES FEIRAS"}
           </button>
         </div>
       </div>
+
+      {error && <p className={styles.errorText}>{error}</p>}
+
       <div className={styles.mainFairs} ref={fairsSectionRef}>
         <h1>Principais Feiras</h1>
         <div className={styles.fairsList}>
