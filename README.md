@@ -2,6 +2,8 @@
 
 O FomentAI é uma plataforma inteligente projetada para ajudar estudantes e pesquisadores a encontrar as feiras científicas e olimpíadas mais relevantes para seus projetos. Utilizando a API do Google Gemini, a aplicação analisa a descrição de um projeto e a compara com uma base de dados de eventos, fornecendo recomendações personalizadas para aumentar as chances de sucesso e reconhecimento.
 
+![Preview](assets/preview.png)
+
 ## 🚀 Stack de Tecnologias
 
 O projeto é dividido em três componentes principais:
