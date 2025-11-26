@@ -13,22 +13,18 @@ function Login({ onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Limpa erros anteriores
+    setError("");
 
     try {
-      // O endpoint de login pode variar. Se o seu for diferente, ajuste aqui.
-      // Ex: /api/auth/login, /login, etc.
       const response = await axios.post("http://localhost:8080/login", {
         email: email,
-        senha: password, // O backend deve esperar 'email' e 'senha'
+        senha: password,
       });
 
-      // Se a requisição foi bem-sucedida (status 2xx), o login funcionou.
-      // O navegador já armazenou o cookie de sessão (JSESSIONID) automaticamente.
       if (response.status === 200) {
         alert("Login realizado com sucesso!");
-        onLoginSuccess(email); // Informa ao App.jsx que o login foi feito
-        navigate("/"); // Redireciona para a página principal
+        onLoginSuccess(email);
+        navigate("/");
       }
     } catch (err) {
       console.error("Erro ao fazer login:", err);

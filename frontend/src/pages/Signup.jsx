@@ -28,12 +28,10 @@ function Signup() {
     const userData = {
       nome: formData.nome,
       senha: formData.senha,
-      // Garante que uma string vazia seja enviada como null
       dataNascimento: formData.dataNascimento ? formData.dataNascimento : null,
       campoDeEstudo: formData.campoDeEstudo ? formData.campoDeEstudo : null,
       contato: {
         email: formData.email,
-        // Garante que uma string vazia seja enviada como null
         telefone: formData.telefone ? formData.telefone : null,
       },
       tokenSenha: null,

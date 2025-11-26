@@ -119,12 +119,9 @@ function Admin() {
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
     try {
-      // Tenta criar uma data. Pode ser um timestamp ou uma string ISO.
       const date = new Date(dateString);
-      // Retorna a data no formato YYYY-MM-DD
       return date.toISOString().split("T")[0];
     } catch (error) {
-      // Se falhar, retorna a string original (pode já estar no formato certo)
       return dateString;
     }
   };
@@ -136,7 +133,7 @@ function Admin() {
       formattedDatas[key] = formatDateForInput(fair.datas[key]);
     }
     setFormData({
-      ...initialFormState, // Garante que todos os campos sejam resetados primeiro
+      ...initialFormState,
       ...fair,
       datas: formattedDatas,
     });
@@ -148,7 +145,7 @@ function Admin() {
       try {
         await axios.delete(`http://localhost:8080/foment/feiras/${fairId}`);
         alert("Feira excluída com sucesso!");
-        fetchFairs(); // Atualiza a lista
+        fetchFairs();
       } catch (error) {
         console.error("Erro ao excluir feira:", error);
         alert("Ocorreu um erro ao excluir a feira.");
@@ -165,8 +162,6 @@ function Admin() {
     e.preventDefault();
 
     try {
-      // O payload é o mesmo para criar e editar, o backend deve lidar com isso.
-      // Apenas garantimos que os IDs corretos estão presentes durante a edição.
       const payload = {
         nome: formData.nome,
         vagas: formData.vagas ? parseInt(formData.vagas, 10) : null,
@@ -178,7 +173,6 @@ function Admin() {
         modalidade: formData.modalidade,
         categoria: formData.categoria,
         idade: formData.idade ? parseInt(formData.idade, 10) : null,
-        // Inclui os objetos completos, o backend deve saber como lidar com eles (criar ou atualizar)
         endereco: {
           ...formData.endereco,
           numero: formData.endereco.numero
@@ -203,22 +197,17 @@ function Admin() {
       };
 
       if (editingFairId) {
-        // Modo de Edição: requisição PUT
         await axios.put(
           `http://localhost:8080/foment/feiras/${editingFairId}`,
           payload
         );
         alert("Feira atualizada com sucesso!");
       } else {
-        // Modo de Criação: requisição POST
-        // A lógica de criação em múltiplos passos foi simplificada para um único POST.
-        // Isso assume que o backend pode lidar com a criação aninhada.
-        // Se o backend exigir os múltiplos passos, a lógica original deve ser mantida aqui dentro.
         await axios.post("http://localhost:8080/foment/feiras", payload);
         alert("Feira cadastrada com sucesso!");
       }
 
-      cancelEdit(); // Limpa o formulário e sai do modo de edição
+      cancelEdit();
       fetchFairs();
     } catch (error) {
       console.error(
