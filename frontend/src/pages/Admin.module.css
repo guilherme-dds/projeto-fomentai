@@ -106,22 +106,53 @@
   grid-column: 1 / -1;
 }
 
+.formActions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
 .submitButton {
-  width: 100%;
+  flex: 1;
   height: 54px;
   background: linear-gradient(90deg, #0089ed, #00c2ff);
   border: none;
   border-radius: 10px;
   font-family: "Inter", sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  margin-top: 20px;
 }
 
 .submitButton:hover {
+  transform: scale(1.01);
+}
+
+.cancelButton {
+  flex: 1;
+  height: 54px;
+  background-color: #6c757d;
+  border: none;
+  background-color: transparent;
+  border: 2px solid #94a3b8;
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  color: #475569;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+  background-color: #475569;
+  border-color: #475569;
+  color: #fff;
   transform: scale(1.01);
 }
 
@@ -174,4 +205,33 @@
 
 .fairItem p strong {
   color: #334155;
+}
+
+.fairActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 15px;
+}
+
+.editButton,
+.deleteButton {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.editButton {
+  background-color: #007bff;
+}
+
+.deleteButton {
+  background-color: #dc3545;
 }

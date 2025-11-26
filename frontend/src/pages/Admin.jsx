@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./Admin.module.css";
+import { useRef } from "react";
 
 function Admin() {
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     nome: "",
     vagas: "",
     resumo: "",
@@ -44,9 +45,12 @@ function Admin() {
         id: null,
       },
     },
-  });
+  };
+  const [formData, setFormData] = useState(initialFormState);
 
   const [fairs, setFairs] = useState([]);
+  const [editingFairId, setEditingFairId] = useState(null);
+  const formRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -112,44 +116,58 @@ function Admin() {
     fetchFairs();
   }, []);
 
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return "";
+    try {
+      // Tenta criar uma data. Pode ser um timestamp ou uma string ISO.
+      const date = new Date(dateString);
+      // Retorna a data no formato YYYY-MM-DD
+      return date.toISOString().split("T")[0];
+    } catch (error) {
+      // Se falhar, retorna a string original (pode já estar no formato certo)
+      return dateString;
+    }
+  };
+
+  const handleEdit = (fair) => {
+    setEditingFairId(fair.id);
+    const formattedDatas = { ...initialFormState.datas };
+    for (const key in fair.datas) {
+      formattedDatas[key] = formatDateForInput(fair.datas[key]);
+    }
+    setFormData({
+      ...initialFormState, // Garante que todos os campos sejam resetados primeiro
+      ...fair,
+      datas: formattedDatas,
+    });
+    formRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleDelete = async (fairId) => {
+    if (window.confirm("Tem certeza que deseja excluir esta feira?")) {
+      try {
+        await axios.delete(`http://localhost:8080/foment/feiras/${fairId}`);
+        alert("Feira excluída com sucesso!");
+        fetchFairs(); // Atualiza a lista
+      } catch (error) {
+        console.error("Erro ao excluir feira:", error);
+        alert("Ocorreu um erro ao excluir a feira.");
+      }
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingFairId(null);
+    setFormData(initialFormState);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // 1. Cadastrar Endereço
-      const enderecoPayload = {
-        ...formData.endereco,
-        numero: formData.endereco.numero
-          ? parseInt(formData.endereco.numero, 10)
-          : null,
-        cep: formData.endereco.cep ? parseInt(formData.endereco.cep, 10) : null,
-      };
-      const enderecoResponse = await axios.post(
-        "http://localhost:8080/foment/enderecos",
-        enderecoPayload
-      );
-      const enderecoId = enderecoResponse.data.id;
-      console.log("Endereço cadastrado:", enderecoResponse.data);
-
-      // 2. Cadastrar Datas
-      const datasPayload = { ...formData.datas };
-      const datasResponse = await axios.post(
-        "http://localhost:8080/foment/datas",
-        datasPayload
-      );
-      const datasId = datasResponse.data.id;
-      console.log("Datas cadastradas:", datasResponse.data);
-
-      // 3. Cadastrar Contato
-      const contatoPayload = { ...formData.contato };
-      const contatoResponse = await axios.post(
-        "http://localhost:8080/foment/contatos",
-        contatoPayload
-      );
-      const contatoId = contatoResponse.data.id;
-      console.log("Contato cadastrado:", contatoResponse.data);
-      // 4. Cadastrar Feira
-      const feiraPayload = {
+      // O payload é o mesmo para criar e editar, o backend deve lidar com isso.
+      // Apenas garantimos que os IDs corretos estão presentes durante a edição.
+      const payload = {
         nome: formData.nome,
         vagas: formData.vagas ? parseInt(formData.vagas, 10) : null,
         resumo: formData.resumo,
@@ -160,9 +178,19 @@ function Admin() {
         modalidade: formData.modalidade,
         categoria: formData.categoria,
         idade: formData.idade ? parseInt(formData.idade, 10) : null,
-        datas: { id: datasId },
-        endereco: { id: enderecoId },
-        contato: { id: contatoId },
+        // Inclui os objetos completos, o backend deve saber como lidar com eles (criar ou atualizar)
+        endereco: {
+          ...formData.endereco,
+          numero: formData.endereco.numero
+            ? parseInt(formData.endereco.numero, 10)
+            : null,
+          cep: formData.endereco.cep
+            ? parseInt(formData.endereco.cep, 10)
+            : null,
+        },
+        datas: formData.datas,
+        contato: formData.contato,
+        organizacao: formData.organizacao,
         premiacao: {
           ...formData.premiacao,
           valor: formData.premiacao.valor
@@ -171,48 +199,44 @@ function Admin() {
           quantidade: formData.premiacao.quantidade
             ? parseInt(formData.premiacao.quantidade, 10)
             : null,
-          datas: {
-            id: datasId,
-          },
         },
       };
-      const feiraResponse = await axios.post(
-        "http://localhost:8080/foment/feiras",
-        feiraPayload
-      );
-      const feiraId = feiraResponse.data.id;
-      console.log("Feira cadastrada:", feiraResponse.data);
 
-      // 5. Cadastrar Organização
-      const organizacaoPayload = {
-        ...formData.organizacao,
-        endereco: { id: enderecoId },
-        feira: { id: feiraId },
-      };
-      const orgResponse = await axios.post(
-        "http://localhost:8080/foment/organizacoes",
-        organizacaoPayload
-      );
-      console.log("Organização cadastrada:", orgResponse.data);
+      if (editingFairId) {
+        // Modo de Edição: requisição PUT
+        await axios.put(
+          `http://localhost:8080/foment/feiras/${editingFairId}`,
+          payload
+        );
+        alert("Feira atualizada com sucesso!");
+      } else {
+        // Modo de Criação: requisição POST
+        // A lógica de criação em múltiplos passos foi simplificada para um único POST.
+        // Isso assume que o backend pode lidar com a criação aninhada.
+        // Se o backend exigir os múltiplos passos, a lógica original deve ser mantida aqui dentro.
+        await axios.post("http://localhost:8080/foment/feiras", payload);
+        alert("Feira cadastrada com sucesso!");
+      }
 
-      alert("Feira, Endereço e Organização cadastrados com sucesso!");
+      cancelEdit(); // Limpa o formulário e sai do modo de edição
       fetchFairs();
     } catch (error) {
       console.error(
         "Erro no processo de cadastro:",
         error.response?.data || error.message
       );
-      alert(
-        "Ocorreu um erro durante o cadastro. Verifique o console para mais detalhes."
-      );
+      const action = editingFairId ? "atualizar" : "cadastrar";
+      alert(`Ocorreu um erro ao ${action} a feira. Verifique o console.`);
     }
   };
 
   return (
     <div className={styles.adminContainer}>
-      <div className={styles.panel}>
+      <div className={styles.panel} ref={formRef}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Cadastro de Feiras</h1>
+          <h1 className={styles.title}>
+            {editingFairId ? "Editando Feira" : "Cadastro de Feiras"}
+          </h1>
         </div>
         <form onSubmit={handleSubmit} className={styles.form}>
           <fieldset className={styles.formSection}>
@@ -482,9 +506,16 @@ function Admin() {
             </div>
           </fieldset>
 
-          <button type="submit" className={styles.submitButton}>
-            Cadastrar Feira
-          </button>
+          <div className={styles.formActions}>
+            <button type="submit" className={styles.submitButton}>
+              {editingFairId ? "Salvar Alterações" : "Cadastrar Feira"}
+            </button>
+            {editingFairId && (
+              <button type="button" onClick={cancelEdit} className={styles.cancelButton}>
+                Cancelar Edição
+              </button>
+            )}
+          </div>
         </form>
 
         <div className={styles.fairsListContainer}>
@@ -501,10 +532,20 @@ function Admin() {
                     <strong>Local:</strong>{" "}
                     {fair.endereco?.estado || "Não informado"}
                   </p>
-                  <p>
-                    <strong>Início:</strong>{" "}
-                    {fair.datas?.dataInicio || "Não informado"}
-                  </p>
+                  <div className={styles.fairActions}>
+                    <button
+                      onClick={() => handleEdit(fair)}
+                      className={styles.editButton}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      onClick={() => handleDelete(fair.id)}
+                      className={styles.deleteButton}
+                    >
+                      Excluir
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (

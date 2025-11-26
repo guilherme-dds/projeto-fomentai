@@ -4,6 +4,7 @@ import com.example.foment.domain.*;
 import com.example.foment.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,12 @@ public class FomentController {
     @GetMapping("/usuarios")
     public List<User> buscarUsuarios() {
         return fomentServiceUser.buscarUsuarios();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody User payload) {
+        User user = fomentServiceUser.login(payload.getContato().getEmail(), payload.getSenha());
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/usuarios/{id}")

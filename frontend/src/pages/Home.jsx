@@ -6,7 +6,7 @@ import styles from "./Home.module.css";
 import logo from "../assets/logo.png";
 import placeholder from "../assets/placeholder.png";
 
-function Home() {
+function Home({ user, onLogout }) {
   const [fileName, setFileName] = useState(null);
   const [text, setText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -98,12 +98,17 @@ function Home() {
             <li>Sec 3</li>
           </ul>
           <div className={styles.action}>
-            <Link to="/login" className={styles.login}>
-              Login
-            </Link>
-            <Link to="/signup" className={styles.signup}>
-              Cadastre-se
-            </Link>
+            {user ? (
+              <>
+                <span className={styles.userName}>{user.email}</span>
+                <button onClick={onLogout} className={styles.logout}>Sair</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className={styles.login}>Login</Link>
+                <Link to="/signup" className={styles.signup}>Cadastre-se</Link>
+              </>
+            )}
           </div>
         </div>
         <div

@@ -8,13 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-
-    /**
-     * Busca um usuário pelo email que está dentro da entidade Contato associada.
-     * Exemplo de consulta: "SELECT u FROM User u WHERE u.contato.email = ?1"
-     */
     Optional<User> findByContatoEmail(String email);
 
-    // Você pode adicionar outros métodos de consulta personalizados aqui
-    // Ex: Optional<User> findByCpf(String cpf);
+
 }

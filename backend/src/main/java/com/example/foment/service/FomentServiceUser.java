@@ -6,6 +6,7 @@ import com.example.foment.domain.User;
 import com.example.foment.repository.ContatoRepository;
 import com.example.foment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +16,17 @@ import java.util.List;
 public class FomentServiceUser {
 
     private final UserRepository userRepository;
-    private final ContatoRepository contatoRepository; // ✅ injetado corretamente
+    private final ContatoRepository contatoRepository;
+    private final BCryptPasswordEncoder encoder;
+
 
     public User cadastrarUsuario(User usuario) {
+
+        // Criptografa a senha ANTES de salvar
+        if (usuario.getSenha() != null) {
+            usuario.setSenha(encoder.encode(usuario.getSenha()));
+        }
+
         // --- ENDEREÇO PRINCIPAL ---
         if (usuario.getEndereco() == null) {
             usuario.setEndereco(new Endereco());
@@ -27,29 +36,25 @@ public class FomentServiceUser {
         if (usuario.getContato() == null) {
             usuario.setContato(new Contato());
         } else if (usuario.getContato().getId() != null) {
-            // Se o contato já existe, pega a entidade gerenciada do banco
             Contato contatoGerenciado = contatoRepository.findById(usuario.getContato().getId())
                     .orElseThrow(() -> new RuntimeException("Contato não encontrado"));
             usuario.setContato(contatoGerenciado);
         }
 
-        // --- ENDEREÇO DENTRO DO CONTATO ---
+        // --- ENDEREÇO DO CONTATO ---
         if (usuario.getContato().getEndereco() == null) {
             usuario.getContato().setEndereco(new Endereco());
         }
 
-        // --- SALVAR USUÁRIO ---
         return userRepository.save(usuario);
     }
 
-    // --- métodos de edição, busca, deletar, etc. permanecem iguais ---
+
     public User editarUsuario(User usuario) {
         User userExistente = userRepository.findById(usuario.getId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         userExistente.setNome(usuario.getNome());
-        userExistente.setSenha(usuario.getSenha());
-        userExistente.setTokenSenha(usuario.getTokenSenha());
         userExistente.setFotoPerfil(usuario.getFotoPerfil());
         userExistente.setTusCode(usuario.getTusCode());
         userExistente.setDataNascimento(usuario.getDataNascimento());
@@ -57,6 +62,11 @@ public class FomentServiceUser {
         userExistente.setAtivo(usuario.getAtivo());
         userExistente.setCpf(usuario.getCpf());
         userExistente.setCampoDeEstudo(usuario.getCampoDeEstudo());
+
+        // Se o usuário quiser mudar a senha → criptografa de novo
+        if (usuario.getSenha() != null) {
+            userExistente.setSenha(encoder.encode(usuario.getSenha()));
+        }
 
         atualizarEnderecoUsuario(userExistente, usuario.getEndereco());
         atualizarContato(userExistente, usuario.getContato());
@@ -83,6 +93,23 @@ public class FomentServiceUser {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
+
+    public User login(String email, String senha) {
+
+        User user = userRepository.findByContatoEmail(email)
+                .orElseThrow(() -> new RuntimeException("Credenciais inválidas"));
+
+        // Compare com BCrypt — nunca usando equals()
+        if (!encoder.matches(senha, user.getSenha())) {
+            throw new RuntimeException("Credenciais inválidas");
+        }
+
+        user.setTokenSenha("TOKEN-" + System.currentTimeMillis());
+        userRepository.save(user);
+
+        return user;
+    }
+
 
     private void atualizarContato(User userExistente, Contato contatoAtualizado) {
         if (contatoAtualizado != null) {

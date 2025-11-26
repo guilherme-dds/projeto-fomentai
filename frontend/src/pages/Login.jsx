@@ -1,10 +1,40 @@
 import styles from "../pages/Login.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import axios from "axios";
 
-function Login() {
+function Login({ onLoginSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(""); // Limpa erros anteriores
+
+    try {
+      // O endpoint de login pode variar. Se o seu for diferente, ajuste aqui.
+      // Ex: /api/auth/login, /login, etc.
+      const response = await axios.post("http://localhost:8080/login", {
+        email: email,
+        senha: password, // O backend deve esperar 'email' e 'senha'
+      });
+
+      // Se a requisição foi bem-sucedida (status 2xx), o login funcionou.
+      // O navegador já armazenou o cookie de sessão (JSESSIONID) automaticamente.
+      if (response.status === 200) {
+        alert("Login realizado com sucesso!");
+        onLoginSuccess(email); // Informa ao App.jsx que o login foi feito
+        navigate("/"); // Redireciona para a página principal
+      }
+    } catch (err) {
+      console.error("Erro ao fazer login:", err);
+      setError("Email ou senha inválidos. Por favor, tente novamente.");
+    }
+  };
 
   return (
     <div className={styles.background}>
@@ -15,28 +45,42 @@ function Login() {
             FOMENT<span className={styles.ai}>.AI</span>
           </span>
         </h1>
-        <div className={styles.inputs}>
-          <div className={styles.email}>
-            <label>Email</label>
-            <input type="email" placeholder="Endereço de EMAIL" />
-          </div>
-          <div className={styles.password}>
-            <label>Crie sua senha</label>
-            <div className={styles.passwordWrapper}>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.inputs}>
+            <div className={styles.email}>
+              <label>Email</label>
               <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Senha"
+                type="email"
+                placeholder="Endereço de EMAIL"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className={styles.eyeIcon}
-              >
-                {showPassword ? <FiEyeOff /> : <FiEye />}
-              </span>
+            </div>
+            <div className={styles.password}>
+              <label>Sua senha</label>
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={styles.eyeIcon}
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <button className={styles.btn}>Cadastrar-se</button>
+          {error && <p className={styles.error}>{error}</p>}
+          <button type="submit" className={styles.btn}>
+            Entrar
+          </button>
+        </form>
         <p className={styles.footer}>
           Não possui uma conta?{" "}
           <Link to="/signup" className={styles.link}>

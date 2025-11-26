@@ -6,13 +6,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.sql.Date;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "usuario")
+@Table(name = "Usuario")
 public class User {
 
     @Id
@@ -22,11 +24,6 @@ public class User {
 
     @Column(name = "nome")
     private String nome;
-
-    // O CAMPO EMAIL FOI REMOVIDO DAQUI
-    // Ele deve ser acessado via 'contato.email'
-    // @Column(unique = true, nullable = false)
-    // private String email;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String senha;
@@ -57,8 +54,7 @@ public class User {
 
     // --- RELACIONAMENTOS ---
 
-    // RELACIONAMENTO COM CONTATO
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "contato_id", referencedColumnName = "contato_id")
     private Contato contato;
 
@@ -90,4 +86,15 @@ public class User {
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("usuario-projeto")
     private Projeto projeto;
+
+    @PrePersist
+    @PreUpdate
+    public void hashPassword() {
+        // Verifica se a senha não é nula e se ela NÃO é um hash BCrypt
+        // Um hash BCrypt sempre começa com "$2a$", "$2b$" ou "$2y$".
+        if (this.senha != null && !this.senha.startsWith("$2")) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            this.senha = passwordEncoder.encode(this.senha);
+        }
+    }
 }

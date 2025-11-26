@@ -28,11 +28,13 @@ function Signup() {
     const userData = {
       nome: formData.nome,
       senha: formData.senha,
-      dataNascimento: formData.dataNascimento || null,
-      campoDeEstudo: formData.campoDeEstudo || null,
+      // Garante que uma string vazia seja enviada como null
+      dataNascimento: formData.dataNascimento ? formData.dataNascimento : null,
+      campoDeEstudo: formData.campoDeEstudo ? formData.campoDeEstudo : null,
       contato: {
         email: formData.email,
-        telefone: formData.telefone || null,
+        // Garante que uma string vazia seja enviada como null
+        telefone: formData.telefone ? formData.telefone : null,
       },
       tokenSenha: null,
       fotoPerfil: null,
