@@ -7,14 +7,14 @@ import Admin from "./pages/Admin";
 import Resultados from "./pages/Resultados";
 
 function App() {
-  const [user, setUser] = useState(null); // Estado para armazenar o usuário logado
+  const [user, setUser] = useState(null);
 
   const handleLoginSuccess = (email) => {
-    setUser({ email }); // Define o usuário no estado
+    setUser({ email });
   };
 
   const handleLogout = () => {
-    setUser(null); // Limpa o estado do usuário
+    setUser(null);
   };
 
   return (
